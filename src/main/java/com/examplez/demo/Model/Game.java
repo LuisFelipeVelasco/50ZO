@@ -15,6 +15,8 @@ public class Game {
     List<Player> players;
     Desk deskGame;
     DiscardPile discardPileGame;
+    Card currenCardPlayed;
+
 
     void Game(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
@@ -47,13 +49,6 @@ public class Game {
         return setCards;
     }
 
-    Card drawRandomCard(List<Card> setCards) {
-        int randomIndex = ThreadLocalRandom.current().nextInt(1, setCards.size());
-        Card randomCard = setCards.get(randomIndex);
-        setCards.remove(randomIndex);
-        return randomCard;
-    }
-
     void setPlayers(List<Card> setCards) {
         for (int i = 0; i < numberOfPlayers; i++) {
             List<Card> handPlayer = new ArrayList<>();
@@ -70,27 +65,13 @@ public class Game {
         }
     }
 
-    void restartDesk() {
-        deskGame.addCardsToDesk(discardPileGame.getCardsExceptLastOne());
-    }
 
-    List<Card> getHandHumanPlayer() {
-        for (Player player : players) {
-            if (player.getTurn() == 0) {
-                return player.getHandCard();
-            }
-        }
-        return List.of();
-    }
 
     boolean isPlayerHumanCardValid(Card cardPlayed) {
         if (maximumSumGame < cardPlayed.getCardValue() + currentSumGame) return false;
         return true;
     }
 
-    void addCardPlayedToDiscardPile(Card cardPlayed) {
-        discardPileGame.addNewCard(cardPlayed);
-    }
 
     boolean isMachinePlayerAbleToPlay(int turnPlayer) {
         for (int i = 0; i < players.size(); i++) {
@@ -102,15 +83,97 @@ public class Game {
         return false;
     }
 
+    boolean isDeskEmpty(){
+        return deskGame.isEmpty();
+    }
+
+
+    void processCardPlayedByMachinePlayer(int turnMachinePlayer){
+        Card cardPlayed= getCardPlayedByMachinePlayer(turnMachinePlayer);
+        currentSumGame+=cardPlayed.getCardValue();
+        addCardPlayedToDiscardPile(cardPlayed);
+        currenCardPlayed=cardPlayed;
+        addDeskCardToPlayerHand(turnMachinePlayer);
+    }
+
+    void processCardPlayedByHumanPlayer(int turnMachinePlayer , String cardDirection){
+        Card cardPlayed= getCardByDirection(cardDirection);
+        currentSumGame+=cardPlayed.getCardValue();
+        addCardPlayedToDiscardPile(cardPlayed);
+        currenCardPlayed=cardPlayed;
+        addDeskCardToPlayerHand(turnMachinePlayer);
+    }
+
+    void addCardPlayedToDiscardPile(Card cardPlayed) {
+        discardPileGame.addNewCard(cardPlayed);
+    }
+    void addDeskCardToPlayerHand(int turnPlayer){
+        for(int i=0;i<players.size();i++){
+            Player currentPlayer=players.get(i);
+            if(currentPlayer.getTurn()==turnPlayer){
+                currentPlayer.addCardToHand(deskGame.getLastCard());
+            }
+        }
+    }
+    Card getCardByDirection(String cardDirection){
+        String idCard = cardDirection.substring(0, 2);
+        for(Card c:getHandHumanPlayer()){
+            if(c.getIdCard()==idCard){
+                return c;
+            }
+        }
+        return null;
+    }
     Card getCardPlayedByMachinePlayer(int turnMachinePlayer){
-        for (int i = 0; i < players.size(); i++) {
-            Player currentPlayer = players.get(i);
-            if (currentPlayer.getTurn() == i  && currentPlayer instanceof PlayerMachine machine) {
+        for (Player p:players) {
+            if (p.getTurn() == turnMachinePlayer  && p instanceof PlayerMachine machine) {
                 return machine.cardPlayed(currentSumGame, maximumSumGame);
             }
         }
         return null;
     }
+
+    List<Card> getHandHumanPlayer() {
+        for (Player player : players) {
+            if (player.getTurn() == 0) {
+                return player.getHandCard();
+            }
+        }
+        return List.of();
+    }
+
+    List<String>getCardDirectionsHandHumanPlayer(){
+        List<Card> handHuman= getHandHumanPlayer();
+        List<String>CardDirectionHandHumanPlayer=new ArrayList<>();
+        for(Card c:handHuman){
+            CardDirectionHandHumanPlayer.add(getDirectionCurrentCard(c));
+        }
+        return CardDirectionHandHumanPlayer;
+    }
+
+    String getDirectionCurrentCardPlayed(){
+        String id= currenCardPlayed.getIdCard();
+        String value= String.valueOf(currenCardPlayed.getCardValue());
+        return id+"-"+value+".png";
+    }
+
+    String getDirectionCurrentCard( Card card){
+        String id= card.getIdCard();
+        String value= String.valueOf(card.getCardValue());
+        return id+"-"+value+".png";
+    }
+
+    Card drawRandomCard(List<Card> setCards) {
+        int randomIndex = ThreadLocalRandom.current().nextInt(1, setCards.size());
+        Card randomCard = setCards.get(randomIndex);
+        setCards.remove(randomIndex);
+        return randomCard;
+    }
+
+    void restartDesk() {
+        deskGame.addCardsToDesk(discardPileGame.getCardsExceptLastOne());
+    }
+
     void eliminatePlayer(int turnPlayer) {
         for (int i = 0; i < players.size(); i++) {
             Player currentPlayer = players.get(i);
@@ -121,12 +184,4 @@ public class Game {
         }
     }
 
-    void addDeskCardToPlayerHand(int turnPlayer){
-        for(int i=0;i<players.size();i++){
-            Player currentPlayer=players.get(i);
-            if(currentPlayer.getTurn()==turnPlayer){
-                currentPlayer.addCardToHand(deskGame.getLastCard());
-            }
-        }
-    }
 }

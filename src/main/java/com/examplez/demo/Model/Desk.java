@@ -12,4 +12,5 @@ public class Desk {
     Card getLastCard(){
         return Desk.get(Desk.size()-1);
     }
+    boolean isEmpty(){return Desk.isEmpty();}
 }
