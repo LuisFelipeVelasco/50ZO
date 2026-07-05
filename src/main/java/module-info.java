@@ -1,6 +1,7 @@
 module com.examplez.demo {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.smartcardio;
 
 
     opens com.examplez.demo to javafx.fxml;
