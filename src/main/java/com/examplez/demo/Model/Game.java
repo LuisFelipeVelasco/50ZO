@@ -16,11 +16,12 @@ public class Game {
     Desk deskGame;
     DiscardPile discardPileGame;
 
-    void Game(int numberOfPlayers) {
+    public  Game(int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    void startGame() {
+   public  void startGame() {
+        players=new ArrayList<>();
         List<Card> setCards = setCards();
         Card initialCard = drawRandomCard(setCards);
         discardPileGame = new DiscardPile(List.of(initialCard));
@@ -74,7 +75,7 @@ public class Game {
         deskGame.addCardsToDesk(discardPileGame.getCardsExceptLastOne());
     }
 
-    List<Card> getHandHumanPlayer() {
+    public List<Card> getHandHumanPlayer() {
         for (Player player : players) {
             if (player.getTurn() == 0) {
                 return player.getHandCard();
