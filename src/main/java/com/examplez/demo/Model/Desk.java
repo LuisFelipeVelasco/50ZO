@@ -10,7 +10,9 @@ public class Desk {
         Desk.addAll(newCards);
     }
     Card getLastCard(){
-        return Desk.get(Desk.size()-1);
+        Card lastCard= Desk.get(Desk.size()-1);
+        Desk.remove(lastCard);
+        return lastCard;
     }
     boolean isEmpty(){return Desk.isEmpty();}
 }

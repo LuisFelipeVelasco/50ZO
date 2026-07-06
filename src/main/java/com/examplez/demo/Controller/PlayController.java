@@ -10,11 +10,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import javafx.scene.control.Label;
 import java.io.IOException;
 import java.util.List;
 
 public class PlayController {
-
+    //TASK: card1, card2, card3 are not in the fxml of game view , instead call the vbox that save the four images and then iterate it with getchildren ,
     private Game game;
     @FXML
     private ImageView card1;
@@ -27,12 +28,16 @@ public class PlayController {
     private ImageView[] cardsImages;
     @FXML
     private ImageView pileCard;
+    @FXML
+    private Label labelGame;
     int numberOfPlayers;
     Stage stage;
     public void setStage(Stage stage){this.stage=stage;}
     public void setNumberOfPlayers(int numberOfPlayers){this.numberOfPlayers=numberOfPlayers;}
     @FXML
-    private void initialize(){
+
+    //TASK: Generate the cards on the board depending on the number of players
+    private void initialize() throws InterruptedException {
         cardsImages = new ImageView[]{
                 card1,
                 card2,
@@ -40,56 +45,64 @@ public class PlayController {
                 card4
         };
         startGame();
-
-
-
     }
-    private void changeView(int idWinner) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/examplez/demo/view/final-view.fxml"));
-        Parent root = fxmlLoader.load();
-        FinalController finalController =fxmlLoader.getController();
-        finalController.showWinner(idWinner);
-        Scene scene = new Scene(root, 800, 600);
-        stage.setTitle("Game");
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+    protected void startGame() throws InterruptedException {
+        game = new Game(numberOfPlayers);     // Humano + 3 máquinas
+        game.startGame();
+        showHandCardPlayer();
+        showCardPile();
+        controlTurns();
     }
+    protected void controlTurns() throws InterruptedException {
+        List<Integer>turnPlayers=game.getTurnPlayers();
+        while(turnPlayers.size()>1){
+            for(int t: game.getTurnPlayers()){
+                labelGame.setText("is turn of player " + t );
+                if(t==0){
+                    PlayerHuman playerHuman= game.getHumanPlayer();
+                    playerHuman.setTurnState(true);
+                    labelGame.setText("is your turn");
+                    game.waitUntilRoundEnds();
+                }
+                else{
+                    if(game.isMachinePlayerAbleToPlay(t)){
+                        game.processCardPlayedByMachinePlayer(t);
+                        showCardPile();
+                    }
+                    //TASK: Delete cards of player in the board
+                    else{
+                        labelGame.setText("Player "+ t+ "was eliminated");
+                    }
+                }
+            }
+        }
+        labelGame.setText("the game is over");
+    }
+    //TASK : image could be null , why?
     protected void showHandCardPlayer(){
         List<Card> hand = game.getHandHumanPlayer();
-
         for(int i = 0; i < hand.size(); i++){
             Card card = hand.get(i);
-
             String path =
-                    "/com/examplez/demo/images/Cards/"
-                            + card.getIdCard()
-                            + "-"
-                            + String.format("%02d", card.getCardValue())
-                            + ".png";
-
+            "/com/examplez/demo/images/Cards/"
+                    + card.getIdCard()
+                    + "-"
+                    + String.format("%02d", card.getCardValue())
+                    + ".png";
             Image image = new Image(getClass().getResourceAsStream(path));
-
             cardsImages[i].setImage(image);
-
             addListener(cardsImages[i], card);
         }
-
-
-
     }
     protected void addListener(ImageView imageView, Card card){
         imageView.setOnMouseClicked(event -> {
-            playCard(card);
-
-
-
-
-
-
-
+            if(game.getHumanPlayer().geTurnState()){
+                playCard(card);
+            }
+            else{
+                labelGame.setText("Is not your turn");
+            }
         });
-
     }
     private void showCardPile(){
 
@@ -102,45 +115,33 @@ public class PlayController {
         Image image = new Image(getClass().getResourceAsStream(path));
 
         pileCard.setImage(image);
-
     }
 
-    protected void startGame(){
-        game = new Game(numberOfPlayers);     // Humano + 3 máquinas
-        game.startGame();
-        showHandCardPlayer();
-        showCardPile();
-
-
-    }
     protected void playCard(Card card){
 
         if(game.isPlayerHumanCardValid(card)){
-
-            game.processCardPlayedByHumanPlayer(0, card.getIdCard());
-
-
-
-
-
-        }else {
-            eliminatePlayer(0);
+            game.processCardPlayedByHumanPlayer(card.getIdCard());
+            showCardPile();
+            showHandCardPlayer();
+            showCardPile();
+            game.endRound();
         }
-        showHandCardPlayer();
-
-        showCardPile();
-
+        else {labelGame.setText("The card selected is not valid");}
     }
+    //Task: Delete the cards on the view of that player
     protected void eliminatePlayer(int turnPlayer) {
-
         game.eliminatePlayer(turnPlayer);
-
-
-
     }
 
-
-
-
-
+    private void changeView(int idWinner) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/examplez/demo/view/final-view.fxml"));
+        Parent root = fxmlLoader.load();
+        FinalController finalController =fxmlLoader.getController();
+        finalController.showWinner(idWinner);
+        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Game");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
 }

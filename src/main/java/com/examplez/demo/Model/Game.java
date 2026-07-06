@@ -40,7 +40,7 @@ public class Game {
                 String fileName = String.valueOf(path.getFileName());
                 String id = fileName.substring(0, 2);
                 //Task:Handle Exception
-                int valueCard = Integer.parseInt(fileName.substring(3));
+                int valueCard = Integer.parseInt(fileName.substring(3,fileName.length()-4));
                 Card card = new Card(valueCard, id);
                 setCards.add(card);
             });
@@ -83,12 +83,6 @@ public class Game {
         }
         return false;
     }
-
-    public boolean isDeskEmpty(){
-        return deskGame.isEmpty();
-    }
-
-
     public void processCardPlayedByMachinePlayer(int turnMachinePlayer){
         Player playerMachine= getMachinePlayerByTurn(turnMachinePlayer);
         Card cardPlayed= getCardPlayedByMachinePlayer(playerMachine);
@@ -99,13 +93,13 @@ public class Game {
         playerMachine.deleteCard(cardPlayed);
     }
 
-    public void processCardPlayedByHumanPlayer(int turnHumanPlayer , String id){
+    public void processCardPlayedByHumanPlayer(String id){
         Player playerHuman=getHumanPlayer();
         Card cardPlayed= getCardById(id);
         currentSumGame+=cardPlayed.getCardValue();
         addCardPlayedToDiscardPile(cardPlayed);
         currenCardPlayed=cardPlayed;
-        addDeskCardToPlayerHand(turnHumanPlayer);
+        addDeskCardToPlayerHand(0);
         playerHuman.deleteCard(cardPlayed);
     }
 
@@ -119,6 +113,7 @@ public class Game {
                 currentPlayer.addCardToHand(deskGame.getLastCard());
             }
         }
+        if(deskGame.isEmpty()) restartDesk();
     }
     PlayerMachine getMachinePlayerByTurn(int turnPlayer){
         for (Player p:players ) {
@@ -128,10 +123,10 @@ public class Game {
         }
         return null;
     }
-    Player getHumanPlayer(){
+    public PlayerHuman getHumanPlayer(){
         for (Player p:players ) {
-            if (p.getTurn() == 0) {
-                return p;
+            if (p.getTurn() == 0 && p instanceof PlayerHuman playerHuman) {
+                return playerHuman;
             }
         }
         return null;
@@ -163,6 +158,14 @@ public class Game {
         return List.of();
     }
 
+    public List<Integer>getTurnPlayers(){
+        List<Integer> turnPlayers= new ArrayList<>();
+        for(Player p:players){
+            turnPlayers.add(p.getTurn());
+        }
+        return turnPlayers;
+    }
+
 
     Card drawRandomCard(List<Card> setCards) {
         int randomIndex = ThreadLocalRandom.current().nextInt(1, setCards.size());
@@ -183,6 +186,17 @@ public class Game {
                 players.remove(i);
             }
         }
+    }
+
+    public synchronized void waitUntilRoundEnds() throws InterruptedException {
+        while (getHumanPlayer().geTurnState()) {
+            wait();
+        }
+    }
+
+    public synchronized void endRound() {
+        getHumanPlayer().setTurnState(false);
+        notifyAll();
     }
 
 }

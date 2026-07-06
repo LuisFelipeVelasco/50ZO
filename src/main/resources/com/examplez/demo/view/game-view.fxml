@@ -17,7 +17,7 @@
             <Image url="@../images/game-image.png" />
          </image>
       </ImageView>
-      <Label fx:id="lbPlayerTurn" layoutX="547.0" layoutY="281.0" text="turno de ..." textFill="#c7c3c3">
+      <Label fx:id="labelGame" layoutX="547.0" layoutY="281.0" text="turno de ..." textFill="#c7c3c3">
          <font>
             <Font name="JetBrainsMono NF Bold" size="17.0" />
          </font>
