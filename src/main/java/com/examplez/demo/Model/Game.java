@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Game {
     int numberOfPlayers;
     int numberOfCardsInHand = 4;
-    int currentSumGame = 0;
+    public int currentSumGame = 0;
     int maximumSumGame = 50;
     List<Player> players;
     Desk deskGame;
@@ -26,7 +26,7 @@ public class Game {
         players=new ArrayList<>();
         List<Card> setCards = setCards();
         Card initialCard = drawRandomCard(setCards);
-        discardPileGame = new DiscardPile(List.of(initialCard));
+        discardPileGame = new DiscardPile(new ArrayList<>(List.of(initialCard)));
         currentSumGame = initialCard.getCardValue();
         setPlayers(setCards);
         deskGame = new Desk(setCards);
@@ -42,7 +42,7 @@ public class Game {
                 //Task:Handle Exception
                 int valueCard = Integer.parseInt(fileName.substring(3,fileName.length()-4));
                 Card card = new Card(valueCard, id);
-                setCards.add(card);
+                if(!id.equals("00"))  setCards.add(card);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,17 +75,12 @@ public class Game {
 
 
     public boolean isMachinePlayerAbleToPlay(int turnPlayer) {
-        for (int i = 0; i < players.size(); i++) {
-            Player currentPlayer = players.get(i);
-            if (currentPlayer.getTurn() == i  && currentPlayer instanceof PlayerMachine machine) {
-                return machine.isAbleToPlay(currentSumGame, maximumSumGame);
-            }
-        }
-        return false;
+            PlayerMachine currentPlayer = getMachinePlayerByTurn(turnPlayer);
+            return currentPlayer.isAbleToPlay(currentSumGame, maximumSumGame);
     }
     public void processCardPlayedByMachinePlayer(int turnMachinePlayer){
-        Player playerMachine= getMachinePlayerByTurn(turnMachinePlayer);
-        Card cardPlayed= getCardPlayedByMachinePlayer(playerMachine);
+        PlayerMachine playerMachine= getMachinePlayerByTurn(turnMachinePlayer);
+        Card cardPlayed=playerMachine.cardPlayed(currentSumGame, maximumSumGame);
         currentSumGame+=cardPlayed.getCardValue();
         addCardPlayedToDiscardPile(cardPlayed);
         currenCardPlayed=cardPlayed;
@@ -140,12 +135,6 @@ public class Game {
                 return c;
             }
         }
-        return null;
-    }
-    Card getCardPlayedByMachinePlayer(Player playerMachine){
-            if (playerMachine instanceof PlayerMachine machine) {
-                return machine.cardPlayed(currentSumGame, maximumSumGame);
-            }
         return null;
     }
 

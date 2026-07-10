@@ -5,7 +5,7 @@ public class PlayerMachine extends Player{
         super(deckCards, turn);
                                                          }
      public Card cardPlayed(int currentSum,int maximumSumPoints){
-        if (currentSum<maximumSumPoints){
+        if (currentSum<=maximumSumPoints){
             for (Card Card: handCard ){
                 if(Card.getCardValue()+currentSum<=maximumSumPoints){
                     return Card;

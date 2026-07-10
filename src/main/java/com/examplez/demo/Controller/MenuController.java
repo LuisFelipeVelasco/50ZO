@@ -34,7 +34,7 @@ public class MenuController {
         Parent root = fxmlLoader.load();
         PlayController playController =fxmlLoader.getController();
         playController.setStage(stage);
-        playController.setNumberOfPlayers(numberOfPlayers);
+        playController.initialize(numberOfPlayers);
         Scene scene = new Scene(root, 1200, 800);
         stage.setTitle("Game");
         stage.setScene(scene);
