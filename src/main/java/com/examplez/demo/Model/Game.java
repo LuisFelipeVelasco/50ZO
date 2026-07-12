@@ -92,7 +92,16 @@ public class Game {
 
         int value = cardPlayed.getCardValue();
 
-        if ("A".equals(cardPlayed.getIdCard())) {
+        if ("01".equals(cardPlayed.getIdCard())) {
+            value = getAceValueForMachine();
+        }
+        if ("14".equals(cardPlayed.getIdCard())) {
+            value = getAceValueForMachine();
+        }
+        if ("27".equals(cardPlayed.getIdCard())) {
+            value = getAceValueForMachine();
+        }
+        if ("40".equals(cardPlayed.getIdCard())) {
             value = getAceValueForMachine();
         }
 
@@ -206,8 +215,11 @@ public class Game {
     }
     public int getAceValueForMachine() {
         if (currentSumGame + 10 <= maximumSumGame) {
+            System.out.println("Entró al if del As, escogio 10");
             return 10;
+
         }
+        System.out.println("Entró al if del As,escogio 1");
         return 1;
     }
 

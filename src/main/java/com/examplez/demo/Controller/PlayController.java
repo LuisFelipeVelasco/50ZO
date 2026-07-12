@@ -208,6 +208,18 @@ public class PlayController {
             int aceValue = card.getCardValue();
 
 
+            if("01".equals(card.getIdCard())){
+                System.out.println("Entró al if del As");
+                aceValue = askAceValue();
+            }
+            if("14".equals(card.getIdCard())){
+                System.out.println("Entró al if del As");
+                aceValue = askAceValue();
+            }
+            if("27".equals(card.getIdCard())){
+                System.out.println("Entró al if del As");
+                aceValue = askAceValue();
+            }
             if("40".equals(card.getIdCard())){
                 System.out.println("Entró al if del As");
                 aceValue = askAceValue();
