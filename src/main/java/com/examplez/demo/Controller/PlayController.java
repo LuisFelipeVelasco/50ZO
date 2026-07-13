@@ -1,6 +1,4 @@
 package com.examplez.demo.Controller;
-
-import com.examplez.demo.GameLauncher;
 import com.examplez.demo.Model.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -20,22 +18,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.scene.control.Label;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayController {
-    //TASK: card1, card2, card3 are not in the fxml of game view , instead call the vbox that save the four images and then iterate it with getchildren ,
     private Game game;
-
     @FXML
     private VBox vbBot1;
-
     @FXML
     private VBox vbBot2;
-
     @FXML
     private VBox vbBot3;
+    @FXML
+    private VBox vbHuman;
     private ArrayList<ImageView> cardsImages;
     @FXML
     private ImageView imCardInPlay;
@@ -43,13 +38,12 @@ public class PlayController {
     private HBox hbPlayerCards;
     @FXML
     private Label labelGame;
+    @FXML
+    private Label labelScore;
     int numberOfPlayers;
     Stage stage;
     public void setStage(Stage stage){this.stage=stage;}
-    public void setNumberOfPlayers(int numberOfPlayers) throws InterruptedException {this.numberOfPlayers=numberOfPlayers;}
     @FXML
-
-    //TASK: Generate the cards on the board depending on the number of players
 
     public void initialize(int numberOfPlayers) throws InterruptedException {
         this.numberOfPlayers=numberOfPlayers;
@@ -80,69 +74,64 @@ public class PlayController {
             @Override
             protected Void call() throws Exception{
                 List<Integer>turnPlayers=game.getTurnPlayers();
-
                 while(turnPlayers.size()>1){
                     for(int t: game.getTurnPlayers()){
-                        System.out.println(game.currentSumGame);
+                        Platform.runLater(() -> {
+                            if(t==0)labelGame.setText("Is your turn");
+                            else labelGame.setText("Is turn of bot " + t);});
+                        Thread.sleep(1000);
                         if(t==0){
-                            Thread.sleep(1000);
                             PlayerHuman playerHuman= game.getHumanPlayer();
                             playerHuman.setTurnState(true);
-                            Platform.runLater(()->{
-                                labelGame.setText("is your turn");});
-                            try {
-                                game.waitUntilRoundEnds();
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
+                            if(game.isHumanPlayerAbleToPlay()){
+                                try {
+                                    game.waitUntilRoundEnds();
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                            else{
+                                game.eliminatePlayer(0);
+                                eliminatePlayer(0);
+                                Platform.runLater(() -> {
+                                    labelGame.setText("You didn´t have valid cards");
+                                });
+                                Thread.sleep(2000);
                             }
                         }
                         else {
-                            Platform.runLater(() -> {
-                            labelGame.setText("is turn of player" + t);});
                             if (game.isMachinePlayerAbleToPlay(t)) {
-                                /*
-                                int waitingTime= ThreadLocalRandom.current().nextInt(1, 4);
-                                Thread thread =new Thread(()->{
-                                    try {
-                                        Thread.sleep(waitingTime* 1000L);
-                                        Platform.runLater(()->{
-                                            game.processCardPlayedByMachinePlayer(t);
-                                            showCardPile();
-                                        });
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                });
-                                thread.start();*/
-                                int waitingTime = ThreadLocalRandom.current().nextInt(1, 4);
-
-                                // Espera para simular que la IA está pensando
-                                Thread.sleep(waitingTime * 1000L);
-
-                                // La IA juega
+                                int waitingPlayTime = ThreadLocalRandom.current().nextInt(2, 4);
+                                Thread.sleep(waitingPlayTime * 1000L);
+                                game.processCardPlayedByMachinePlayer(t);
                                 Platform.runLater(() -> {
-
-                                    game.processCardPlayedByMachinePlayer(t);
-
                                     showCardPile();
+                                    labelGame.setText("Bot " + t + " is drawing a card");
                                 });
-
-                                // Espera un poco para que el usuario vea la carta antes del siguiente turno
-                                Thread.sleep(500);
+                                int waitingDrawTime = ThreadLocalRandom.current().nextInt(2, 4);
+                                Thread.sleep(waitingDrawTime * 1000L);
+                                game.addDeskCardToPlayerHand(t);
                             }
                             else {
                                 game.eliminatePlayer(t);
                                 eliminatePlayer(t);
-                                labelGame.setText("Player " + t + "was eliminated");
+                                Platform.runLater(() -> {
+                                    labelGame.setText("Bot " + t + " didn´t have valid cards");
+
+                                });
+                                Thread.sleep(2000);;
 
                             }
                     }
+                        Platform.runLater(() -> {
+                            labelScore.setText(game.currentSumGame + "");
+                        });
+                        turnPlayers=game.getTurnPlayers();
+                        if(turnPlayers.size()==1) break;
 
                     }
-                    turnPlayers=game.getTurnPlayers();
                 }
                 int winner = turnPlayers.get(0);
-
                 Platform.runLater(() -> {
                     try {
                         changeView(winner);
@@ -155,6 +144,7 @@ public class PlayController {
         return task;
     }
     protected void showHandCardPlayer(){
+
         List<Card> hand = game.getHandHumanPlayer();
 
         for (int i = 0; i < hand.size(); i++) {
@@ -174,7 +164,6 @@ public class PlayController {
             } else {
                 System.out.println("Image not found: " + path);
             }
-
             addListener(cardsImages.get(i), card);
         }
     }
@@ -183,13 +172,9 @@ public class PlayController {
             if(game.getHumanPlayer().geTurnState()){
                 playCard(card);
             }
-            else{
-                labelGame.setText("Is not your turn");
-            }
         });
     }
     private void showCardPile(){
-
         Card card=game.getLastCardPlayed();
         String path = "/com/examplez/demo/images/Cards/"
                 + card.getIdCard()
@@ -197,36 +182,26 @@ public class PlayController {
                 + card.getCardValue()
                 + ".png";
         Image image = new Image(getClass().getResourceAsStream(path));
-
         imCardInPlay.setImage(image);
+        Platform.runLater(() -> {
+            labelScore.setText(game.currentSumGame + "");
+        });
     }
 
     protected void playCard(Card card){
 
         if(game.isPlayerHumanCardValid(card)){
-
             int aceValue = card.getCardValue();
-
-
-            if("01".equals(card.getIdCard())){
-                System.out.println("Entró al if del As");
-                aceValue = askAceValue();
+            if(aceValue==-1){
+                List<Integer> posibleAceValues= game.getPossibleAceValues();
+                if(posibleAceValues.size()==2){
+                    aceValue = askAceValue();
+                }
+                else{
+                    aceValue= posibleAceValues.get(0);
+                }
             }
-            if("14".equals(card.getIdCard())){
-                System.out.println("Entró al if del As");
-                aceValue = askAceValue();
-            }
-            if("27".equals(card.getIdCard())){
-                System.out.println("Entró al if del As");
-                aceValue = askAceValue();
-            }
-            if("40".equals(card.getIdCard())){
-                System.out.println("Entró al if del As");
-                aceValue = askAceValue();
-            }
-
             game.processCardPlayedByHumanPlayer(card.getIdCard(), aceValue);
-            showCardPile();
             showHandCardPlayer();
             showCardPile();
             game.endRound();
@@ -235,6 +210,11 @@ public class PlayController {
     }
     protected void eliminatePlayer(int turnPlayer) {
         game.eliminatePlayer(turnPlayer);
+
+        if (turnPlayer==0) {
+            vbHuman.setVisible(false);
+            vbHuman.setManaged(false);
+        }
 
         if (turnPlayer==1) {
             vbBot1.setVisible(false);
@@ -250,14 +230,12 @@ public class PlayController {
         }
     }
     private int askAceValue() {
-
         ChoiceDialog<Integer> dialog =
                 new ChoiceDialog<>(10, List.of(1, 10));
 
         dialog.setTitle("Ace");
         dialog.setHeaderText("Choose the value of the Ace");
         dialog.setContentText("Value:");
-
         return dialog.showAndWait().orElse(1);
     }
 
