@@ -294,6 +294,9 @@ public class PlayController {
                 List<Integer> posibleAceValues= game.getPossibleAceValues();
                 if(posibleAceValues.size()==2){
                     aceValue = askAceValue();
+                    if(aceValue==-1){
+                        return;
+                    }
                 }
                 else{
                     aceValue= posibleAceValues.get(0);
@@ -346,7 +349,7 @@ public class PlayController {
         dialog.setTitle("Ace");
         dialog.setHeaderText("Choose the value of the Ace");
         dialog.setContentText("Value:");
-        return dialog.showAndWait().orElse(1);
+        return dialog.showAndWait().orElse(-1);
     }
 
     // -----------------------------------------------------------------------
