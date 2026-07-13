@@ -10,23 +10,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.examplez.demo.Controller.PlayController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.examplez.demo.Controller.PlayController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0">
          <image>
             <Image url="@../images/game-image.png" />
          </image>
       </ImageView>
-      <Label fx:id="labelGame" alignment="CENTER" contentDisplay="CENTER" layoutX="365.0" layoutY="276.0" prefHeight="32.0" prefWidth="486.0" text="turn of ..." textAlignment="CENTER" textFill="#c7c3c3">
+      <Label fx:id="labelGame" alignment="CENTER" contentDisplay="CENTER" layoutX="365.0" layoutY="277.0" prefHeight="32.0" prefWidth="486.0" text="turn of ..." textAlignment="CENTER" textFill="#c7c3c3">
          <font>
             <Font name="Arial Black" size="22.0" />
          </font>
       </Label>
-      <VBox fx:id="vbBot2" alignment="TOP_CENTER" layoutX="359.0" layoutY="32.0" prefHeight="200.0" prefWidth="499.0">
+      <VBox fx:id="vbBot2" alignment="TOP_CENTER" layoutX="359.0" layoutY="22.0" prefHeight="200.0" prefWidth="499.0" styleClass="seat-panel">
          <children>
-            <TextField fx:id="tfSecondBotName" alignment="CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #c7c3c3;" text="Bot 2">
+            <TextField fx:id="tfSecondBotName" alignment="CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #c7c3c3;" text="">
                <font>
-                  <Font name="Montserrat Bold" size="19.0" />
+                  <Font name="Arial Black" size="19.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="20.0" />
@@ -57,7 +57,7 @@
                </children>
             </HBox>
          </children></VBox>
-      <VBox fx:id="vbHuman" alignment="CENTER" layoutX="365.0" layoutY="564.0" prefHeight="200.0" prefWidth="100.0">
+      <VBox fx:id="vbHuman" alignment="CENTER" layoutX="365.0" layoutY="541.0" prefHeight="200.0" prefWidth="100.0" styleClass="seat-panel">
          <children>
             <HBox fx:id="hbPlayerCards" prefHeight="100.0" prefWidth="200.0" spacing="14.0">
                <children>
@@ -85,18 +85,18 @@
             </HBox>
             <TextField fx:id="tfPlayerName" alignment="BOTTOM_CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #D4AF17;" text="Player">
                <font>
-                  <Font name="Montserrat Bold" size="19.0" />
+                  <Font name="Arial Black" size="19.0" />
                </font>
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
             </TextField>
          </children></VBox>
-      <VBox fx:id="vbBot3" alignment="CENTER" layoutX="-124.0" layoutY="295.0" prefHeight="200.0" prefWidth="100.0" rotate="-90.0">
+      <VBox fx:id="vbBot3" alignment="CENTER" layoutX="-124.0" layoutY="295.0" prefHeight="200.0" prefWidth="100.0" rotate="-90.0" styleClass="seat-panel">
          <children>
-            <TextField fx:id="tfThirdBotName" alignment="CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #c7c3c3;" text="Bot 3">
+            <TextField fx:id="tfThirdBotName" alignment="CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #c7c3c3;" text="">
                <font>
-                  <Font name="Montserrat Bold" size="19.0" />
+                  <Font name="Arial Black" size="19.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="20.0" />
@@ -128,11 +128,11 @@
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vbBot1" alignment="CENTER" layoutX="837.0" layoutY="300.0" prefHeight="200.0" prefWidth="100.0" rotate="90.0">
+      <VBox fx:id="vbBot1" alignment="CENTER" layoutX="813.0" layoutY="300.0" prefHeight="200.0" prefWidth="100.0" rotate="90.0" styleClass="seat-panel">
          <children>
             <TextField fx:id="tfFirstBotName" alignment="CENTER" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="461.0" style="-fx-background-color: #c7c3c3;" text="Bot 1">
                <font>
-                  <Font name="Montserrat Bold" size="19.0" />
+                  <Font name="Arial Black" size="19.0" />
                </font>
                <VBox.margin>
                   <Insets bottom="20.0" />

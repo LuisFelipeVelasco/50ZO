@@ -93,6 +93,7 @@ public class MenuController {
         stage.setTitle("Game");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.show();
     }
 }

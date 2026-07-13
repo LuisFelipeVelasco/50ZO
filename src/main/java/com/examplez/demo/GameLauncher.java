@@ -17,6 +17,8 @@ public class GameLauncher extends Application {
         menuController.setStage(stage);
         stage.setTitle("Menu");
         stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.setResizable(false);
         stage.show();
     }
 }

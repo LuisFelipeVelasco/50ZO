@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -37,6 +38,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @version 1.0
  */
 public class PlayController {
+
     // -----------------------------------------------------------------------
     // Game and FXML state
     // -----------------------------------------------------------------------
@@ -60,9 +62,18 @@ public class PlayController {
     /** Image view that displays the last card placed on the discard pile. */
     @FXML
     private ImageView imCardInPlay;
-    /** Horizontal container whose children represent the human player's cards. */
+    /**  container whose children represent the human player's cards. */
     @FXML
     private HBox hbPlayerCards;
+    /** container whose children represent the bot 1 player's cards. */
+    @FXML
+    private HBox hbFirstBotCards;
+    /** container whose children represent the bot 2 player's cards. */
+    @FXML
+    private HBox hbSecondBotCards;
+    /**  container whose children represent the bot 3player's cards. */
+    @FXML
+    private HBox  hbThirdBotCards;
     /** Label used for turn information, validation messages, and game feedback. */
     @FXML
     private Label labelGame;
@@ -73,6 +84,19 @@ public class PlayController {
     int numberOfPlayers;
     /** Primary stage used to navigate to the final result view. */
     Stage stage;
+    /**
+     * Text field used to enter the human player's name.
+     */
+    public TextField tfPlayerName;
+
+    /**Text field used to enter the third bot player's name.*/
+    public TextField tfThirdBotName;
+
+    /*** Text field used to enter the first bot player's name.*/
+    public TextField tfFirstBotName;
+
+    /*** Text field used to enter the second bot player's name.*/
+    public TextField tfSecondBotName;
     // -----------------------------------------------------------------------
     // Controller setup
     // -----------------------------------------------------------------------
@@ -310,8 +334,7 @@ public class PlayController {
         else {labelGame.setText("The card selected is not valid");}
     }
     /**
-     * Removes a player from the game and hides the corresponding interface
-     * container.
+     * Removes a player from the game and hides the corresponding container of cards and change its label.
      *
      * @param turnPlayer turn identifier of the player to eliminate
      */
@@ -319,21 +342,23 @@ public class PlayController {
         game.eliminatePlayer(turnPlayer);
 
         if (turnPlayer==0) {
-            vbHuman.setVisible(false);
-            vbHuman.setManaged(false);
+            hbPlayerCards.setVisible(false);
+            tfPlayerName.setText("You are 💀");
         }
 
         if (turnPlayer==1) {
-            vbBot1.setVisible(false);
-            vbBot1.setManaged(false);
+            hbFirstBotCards.setVisible(false);
+            tfFirstBotName.setText("Bot 1 is 💀");
+
         }
         if (turnPlayer==2){
-            vbBot2.setVisible(false);
-            vbBot2.setManaged(false);
+            hbSecondBotCards.setVisible(false);
+            tfSecondBotName.setText("Bot 2 is 💀");
         }
         if (turnPlayer==3){
-            vbBot3.setVisible(false);
-            vbBot3.setManaged(false);
+            hbThirdBotCards.setVisible(false);
+            tfThirdBotName.setText("Bot 3 is 💀");
+
         }
     /**
      * Opens a choice dialog that asks the human player to assign a value to an
@@ -371,22 +396,22 @@ public class PlayController {
         stage.setTitle("Game");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.show();
     }
     /**
-     * Shows or hides machine-player containers according to the selected
-     * number of participants. The managed state is changed together with the
-     * visible state so hidden containers do not occupy layout space.
+     * Shows or hides machine-player containers of cards according to the selected
+     * number of participants.
      */
     protected void updateBoard() {
-
-        vbBot1.setVisible(numberOfPlayers >= 2);
-        vbBot1.setManaged(numberOfPlayers >= 2);
-
-        vbBot2.setVisible(numberOfPlayers >= 3);
-        vbBot2.setManaged(numberOfPlayers >= 3);
-
-        vbBot3.setVisible(numberOfPlayers >= 4);
-        vbBot3.setManaged(numberOfPlayers >= 4);
+        if(numberOfPlayers>=3){
+            tfSecondBotName.setText("Bot 2");
+            if(numberOfPlayers==4){
+                tfThirdBotName.setText("Bot 3");
+            }
+        }
+        hbFirstBotCards.setVisible(numberOfPlayers >= 2);
+        hbSecondBotCards.setVisible(numberOfPlayers >= 3);
+        hbThirdBotCards.setVisible(numberOfPlayers >= 4);
     }
 }
