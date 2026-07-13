@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -7,29 +8,39 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0"  xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.examplez.demo.Controller.MenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@theme.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.examplez.demo.Controller.MenuController">
    <children>
-      <ImageView>
+      <ImageView fitHeight="190.0" fitWidth="190.0" layoutX="305.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/welcome-image.png" />
+            <Image url="@../images/logo-50zo.png" />
          </image>
       </ImageView>
 
-      <Button  layoutX="296.0" layoutY="391.0" mnemonicParsing="false" onAction="#onButtonTwoPlayers" style="-fx-background-color: #545452;" text="2" textFill="#d4af37">
+      <Label alignment="CENTER" layoutX="150.0" layoutY="278.0" prefWidth="500.0" styleClass="title-label" text="Choose the number of players and start the adventure" wrapText="true">
          <font>
-            <Font name="JetBrainsMono NF Bold" size="15.0" />
-         </font></Button>
-      <Button  layoutX="386.0" layoutY="391.0" mnemonicParsing="false" onAction="#onButtonThreePlayers" style="-fx-background-color: #545452;" text="3" textFill="#d4af37">
+            <Font name="JetBrainsMono NF Bold" size="19.0" />
+         </font>
+      </Label>
+
+      <Button layoutX="245.0" layoutY="385.0" mnemonicParsing="false" onAction="#onButtonTwoPlayers" prefHeight="80.0" prefWidth="80.0" styleClass="player-button" text="2">
          <font>
-            <Font name="JetBrainsMono NF Bold" size="15.0" />
-         </font></Button>
-      <Button  layoutX="488.0" layoutY="391.0" mnemonicParsing="false" onAction="#onButtonFourPlayers" style="-fx-background-color: #545452;" text="4" textFill="#d4af37">
+            <Font name="JetBrainsMono NF Bold" size="22.0" />
+         </font>
+      </Button>
+
+      <Button layoutX="360.0" layoutY="385.0" mnemonicParsing="false" onAction="#onButtonThreePlayers" prefHeight="80.0" prefWidth="80.0" styleClass="player-button" text="3">
          <font>
-            <Font name="JetBrainsMono NF Bold" size="15.0" />
-         </font></Button>
-      <Label layoutX="214.0" layoutY="338.0" text="Choose the number of players and start the adventure" textFill="#c7c3c3">
+            <Font name="JetBrainsMono NF Bold" size="24.0" />
+         </font>
+      </Button>
+
+      <Button layoutX="475.0" layoutY="385.0" mnemonicParsing="false" onAction="#onButtonFourPlayers" prefHeight="80.0" prefWidth="80.0" styleClass="player-button-featured" text="4">
          <font>
-            <Font name="JetBrainsMono NF Bold" size="17.0" />
-         </font></Label>
+            <Font name="JetBrainsMono NF Bold" size="22.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </Pane>
