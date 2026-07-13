@@ -253,7 +253,7 @@ public class PlayController {
      */
     protected void addListener(ImageView imageView, Card card){
         imageView.setOnMouseClicked(event -> {
-            if(game.getHumanPlayer().geTurnState()){
+            if(game.getHumanPlayer().getTurnState()){
                 playCard(card);
             }
         });
