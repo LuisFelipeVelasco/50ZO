@@ -213,18 +213,18 @@ public class Game {
      * and draws a replacement card.
      *
      * @param id identifier of the selected card
-     * @param aceValue effective value chosen for the card when it is an ace
+     * @param cardValue effective value chosen for the card when it is an ace
      *
      * @throws InvalidCardException if the selected card cannot
      *         legally be played via the validateCard method
      */
-    public void processCardPlayedByHumanPlayer(String id,int aceValue) throws InvalidCardException {
+    public void processCardPlayedByHumanPlayer(String id,int cardValue) throws InvalidCardException {
         Player playerHuman=getHumanPlayer();
         Card cardPlayed= getCardById(id);
 
         validateCard(cardPlayed);
 
-        currentSumGame+=aceValue;
+        currentSumGame+=cardValue;
         addCardPlayedToDiscardPile(cardPlayed);
         playerHuman.deleteCard(cardPlayed);
         addDeskCardToPlayerHand(0);
