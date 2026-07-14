@@ -30,8 +30,17 @@ public class Player {
      *
      * @param handCard cards initially held by the player
      * @param turn position used by the turn-management logic
+     *
+     * @throws IllegalArgumentException if the hand is null
      */
     public  Player(List<Card>handCard,int turn){
+
+        if (handCard == null) {
+            throw new IllegalArgumentException(
+                    "The player's hand cannot be void."
+            );
+        }
+
         this.handCard.addAll(handCard);
         this.turn = turn;
     }

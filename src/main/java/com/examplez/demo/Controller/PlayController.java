@@ -1,4 +1,7 @@
 package com.examplez.demo.Controller;
+
+import com.examplez.demo.Exceptions.InvalidCardException;
+import com.examplez.demo.GameLauncher;
 import com.examplez.demo.Model.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -311,7 +314,9 @@ public class PlayController {
      */
     protected void playCard(Card card){
 
-        if(game.isPlayerHumanCardValid(card)){
+
+        try{
+            game.isPlayerHumanCardValid(card);
             int aceValue = card.getCardValue();
             if(aceValue==-1){
                 List<Integer> posibleAceValues= game.getPossibleAceValues();
@@ -330,7 +335,9 @@ public class PlayController {
             showCardPile();
             game.endRound();
         }
-        else {labelGame.setText("The card selected is not valid");}
+        catch (InvalidCardException e){
+            labelGame.setText(e.getMessage());
+        }
     }
     /**
      * Removes a player from the game and hides the corresponding container of cards and change its label.
