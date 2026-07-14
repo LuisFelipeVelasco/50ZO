@@ -1,7 +1,6 @@
 package com.examplez.demo.Controller;
 
 import com.examplez.demo.Exceptions.InvalidCardException;
-import com.examplez.demo.GameLauncher;
 import com.examplez.demo.Model.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -10,11 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -48,18 +45,6 @@ public class PlayController {
 
     /** Model that contains the rules and mutable state of the current match. */
     private Game game;
-    /** Container used to represent the first machine player. */
-    @FXML
-    private VBox vbBot1;
-    /** Container used to represent the second machine player. */
-    @FXML
-    private VBox vbBot2;
-    /** Container used to represent the third machine player. */
-    @FXML
-    private VBox vbBot3;
-    /** Container used to represent the human player. */
-    @FXML
-    private VBox vbHuman;
     /** Image views that display the cards currently held by the human player. */
     private ArrayList<ImageView> cardsImages;
     /** Image view that displays the last card placed on the discard pile. */
@@ -87,19 +72,21 @@ public class PlayController {
     int numberOfPlayers;
     /** Primary stage used to navigate to the final result view. */
     Stage stage;
-    /**
-     * Text field used to enter the human player's name.
-     */
-    public TextField tfPlayerName;
+    /** label used to write the state of bot 1.*/
+    @FXML
+    public Label labelBot1;
 
-    /**Text field used to enter the third bot player's name.*/
-    public TextField tfThirdBotName;
+    /**label used to write the state of bot 2.*/
+    @FXML
+    public Label labelBot2;
 
-    /*** Text field used to enter the first bot player's name.*/
-    public TextField tfFirstBotName;
+    /*** label used to write the state of bot 3.*/
+    @FXML
+    public Label labelBot3;
 
-    /*** Text field used to enter the second bot player's name.*/
-    public TextField tfSecondBotName;
+    /*** label used to write the state of the player.*/
+    @FXML
+    public Label labelPlayer;
     // -----------------------------------------------------------------------
     // Controller setup
     // -----------------------------------------------------------------------
@@ -188,8 +175,8 @@ public class PlayController {
                                 }
                             }
                             else{
-                                eliminatePlayer(0);
                                 Platform.runLater(() -> {
+                                    eliminatePlayer(0);
                                     labelGame.setText("You didn´t have valid cards");
                                 });
                                 Thread.sleep(2000);
@@ -209,9 +196,8 @@ public class PlayController {
                                 game.addDeskCardToPlayerHand(t);
                             }
                             else {
-                                game.eliminatePlayer(t);
-                                eliminatePlayer(t);
                                 Platform.runLater(() -> {
+                                    eliminatePlayer(t);
                                     labelGame.setText("Bot " + t + " didn´t have valid cards");
 
                                 });
@@ -349,21 +335,21 @@ public class PlayController {
 
         if (turnPlayer==0) {
             hbPlayerCards.setVisible(false);
-            tfPlayerName.setText("You are 💀");
+            labelPlayer.setText("You are 💀");
         }
 
         if (turnPlayer==1) {
             hbFirstBotCards.setVisible(false);
-            tfFirstBotName.setText("Bot 1 is 💀");
+            labelBot1.setText("Bot 1 is 💀");
 
         }
         if (turnPlayer==2){
             hbSecondBotCards.setVisible(false);
-            tfSecondBotName.setText("Bot 2 is 💀");
+            labelBot2.setText("Bot 2 is 💀");
         }
         if (turnPlayer==3){
             hbThirdBotCards.setVisible(false);
-            tfThirdBotName.setText("Bot 3 is 💀");
+            labelBot3.setText("Bot 3 is 💀");
 
         }
     /**
@@ -411,9 +397,9 @@ public class PlayController {
      */
     protected void updateBoard() {
         if(numberOfPlayers>=3){
-            tfSecondBotName.setText("Bot 2");
+            labelBot2.setText("Bot 2");
             if(numberOfPlayers==4){
-                tfThirdBotName.setText("Bot 3");
+                labelBot3.setText("Bot 3");
             }
         }
         hbFirstBotCards.setVisible(numberOfPlayers >= 2);
