@@ -438,7 +438,7 @@ public class Game {
         if (maximumSumGame < cardPlayed.getCardValue() + currentSumGame) {
 
             throw new InvalidCardException(
-                    "It is not possible to play this card because the sum would exceed " + maximumSumGame
+                    "Your card exceed " + maximumSumGame+ "  chose other one "
             );
         }
 

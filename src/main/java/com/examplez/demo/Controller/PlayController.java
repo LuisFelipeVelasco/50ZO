@@ -330,7 +330,6 @@ public class PlayController {
      */
     protected void eliminatePlayer(int turnPlayer) {
         game.eliminatePlayer(turnPlayer);
-
         if (turnPlayer==0) {
             hbPlayerCards.setVisible(false);
             labelPlayer.setText("You are 💀");
